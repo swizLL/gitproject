@@ -1,0 +1,3 @@
+﻿  TreeNodeSerialize.cpp
+d:\test\gitproject\lintcodec++\treenodeserialize\treenodeserialize\treenodeserialize.cpp(82): warning C4018: “<”: 有符号/无符号不匹配
+  TreeNodeSerialize.vcxproj -> D:\test\gitproject\LintCodeC++\TreeNodeSerialize\Debug\TreeNodeSerialize.exe
