@@ -2,24 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEffect : MonoBehaviour {
+public class PlayerEffect : MonoBehaviour
+{
     private Renderer[] rendererArray;
     private NcCurveAnimation[] curveAnimaArray;
-	// Use this for initialization
-	void Start () {
+    private GameObject effectOffset;
+    // Use this for initialization
+    void Start()
+    {
         rendererArray = this.GetComponentsInChildren<Renderer>();
         curveAnimaArray = this.GetComponentsInChildren<NcCurveAnimation>();
-	}
+        if (transform.Find("EffectOffset")!= null)
+        {
+            effectOffset = transform.Find("EffectOffset").gameObject;
+        }
+        
+    }
 
     public void Show()
     {
-        foreach(Renderer renderer in rendererArray)
+        if (effectOffset != null)
         {
-            renderer.enabled = true;
+            //先隐藏后显示，使粒子系统进行播放
+            effectOffset.SetActive(false);
+            effectOffset.SetActive(true);
         }
-        foreach(NcCurveAnimation anim in curveAnimaArray)
+        else
         {
-            anim.ResetAnimation();
+            foreach (Renderer renderer in rendererArray)
+            {
+                renderer.enabled = true;
+            }
+            foreach (NcCurveAnimation anim in curveAnimaArray)
+            {
+                anim.ResetAnimation();
+            }
         }
     }
 }

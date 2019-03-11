@@ -175,7 +175,35 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.2293578
+        functionName: skillAttack
+        data: skill1,skill1,attack1,0,0
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.29663607
+        functionName: skillAttack
+        data: skill1,skill1,attack1,0,0
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.38532108
+        functionName: skillAttack
+        data: skill1,skill1,attack3,0,0
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.43425077
+        functionName: ShowEffectSelfToTarget
+        data: FirePhoenixMobile,bird,5
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

@@ -890,7 +890,7 @@ MonoBehaviour:
   ColliderRadius: 0
   EffectRadius: 0
   Target: {fileID: 0}
-  MoveSpeed: 1
+  MoveSpeed: 10
   MoveDistance: 20
   IsHomingMove: 0
   IsVisible: 1

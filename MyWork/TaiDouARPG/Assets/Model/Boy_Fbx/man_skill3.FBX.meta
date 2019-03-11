@@ -157,7 +157,35 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.2366758
+        functionName: skillAttack
+        data: skill3,BloodStrikeEffect1,skill3_1,1,0
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.36685288
+        functionName: skillAttack
+        data: skill3,BloodStrikeEffect2,skill3_2,1,0
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.50027037
+        functionName: skillAttack
+        data: skill3,BloodStrikeEffect3,skill3_3,1,0
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.67225325
+        functionName: skillAttack
+        data: skill3,BloodStrikeEffect4,skill3_4,0,1
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

@@ -287,8 +287,8 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.4950812
-        functionName: ShowEffectDevHand
-        data: 
+        functionName: showEffectToTarget
+        data: normal,DevilHandMobile,5,1
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
