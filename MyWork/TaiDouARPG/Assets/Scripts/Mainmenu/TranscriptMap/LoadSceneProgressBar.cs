@@ -14,6 +14,7 @@ public class LoadSceneProgressBar : MonoBehaviour {
         bg = transform.Find("BG").gameObject;
         progressBar = transform.Find("BG/ProgressBar").GetComponent<Slider>();
         gameObject.SetActive(false);
+
     }
     private void Update()
     {

@@ -6,19 +6,28 @@ public class PlayerAttack : MonoBehaviour
 {
     private Dictionary<string, PlayerEffect> effectDict = new Dictionary<string, PlayerEffect>();
     public PlayerEffect[] effectArray;
+    public int TotalHP=200;
+    public int HP=200;
     //向前方的攻击距离
     public float forwarAttackDis = 2;
     //周围的攻击距离
     public float aroundAttackDis = 2;
     //伤害数组
     public int[] damageArray = new int[] { 20, 30, 30, 30 };
+
+    private Animator anim;
     public enum AttackRange
     {
         Forward,
         Around
     }
+    private void Awake()
+    {
+        anim = this.GetComponent<Animator>();
+    }
     private void Start()
     {
+        HP = TotalHP;
         PlayerEffect[] peArray = this.GetComponentsInChildren<PlayerEffect>();
         foreach (PlayerEffect pe in peArray)
         {
@@ -51,7 +60,7 @@ public class PlayerAttack : MonoBehaviour
         string[] layerArray = { "Wall", "Ground" };
         RaycastHit hit;
         bool ray = Physics.Raycast(transform.position, transform.forward, out hit, 2f, LayerMask.GetMask(layerArray));
-        if (moveForward > 0.1f&&!ray)
+        if (moveForward > 0.1f && !ray)
         {
             iTween.MoveBy(this.gameObject, Vector3.forward * moveForward, 0.3f);
         }
@@ -59,12 +68,13 @@ public class PlayerAttack : MonoBehaviour
         if (attackType == "normal")
         {
             ArrayList array = getEnemyInAttckRange(AttackRange.Forward);
-            foreach(GameObject go in array)
+            foreach (GameObject go in array)
             {
-                go.SendMessage("takeDamage",damageArray[0]+","+proArray[3]+","+proArray[4]);
+                go.SendMessage("takeDamage", damageArray[0] + "," + proArray[3] + "," + proArray[4]);
+                Combo._instance.ComboPlus();
             }
         }
-        
+
     }
     //0 skill1,skill2,skill3
     //1 effect name
@@ -94,6 +104,7 @@ public class PlayerAttack : MonoBehaviour
             foreach (GameObject go in array)
             {
                 go.SendMessage("takeDamage", damageArray[1] + "," + proArray[3] + "," + proArray[4]);
+                Combo._instance.ComboPlus();
             }
         }
         else if (attackType == "skill2")
@@ -103,6 +114,7 @@ public class PlayerAttack : MonoBehaviour
             foreach (GameObject go in array)
             {
                 go.SendMessage("takeDamage", damageArray[2] + "," + proArray[3] + "," + proArray[4]);
+                Combo._instance.ComboPlus();
             }
         }
         else if (attackType == "skill3")
@@ -112,6 +124,7 @@ public class PlayerAttack : MonoBehaviour
             foreach (GameObject go in array)
             {
                 go.SendMessage("takeDamage", damageArray[3] + "," + proArray[3] + "," + proArray[4]);
+                Combo._instance.ComboPlus();
             }
         }
     }
@@ -166,7 +179,7 @@ public class PlayerAttack : MonoBehaviour
                     {
                         GameObject.Instantiate(pe, hit.point, Quaternion.identity);
                     }
-                    go.SendMessage("takeEffectDmage", damage + "," + "skill3_3"+","+proArray[3]);
+                    go.SendMessage("takeEffectDmage", damage + "," + "skill3_3" + "," + proArray[3]);
                 }
             }
         }
@@ -188,10 +201,10 @@ public class PlayerAttack : MonoBehaviour
             ArrayList array = getEnemyInAttckRange(AttackRange.Around);
             foreach (GameObject go in array)
             {
-                GameObject effect=Instantiate(pe,transform.position+new Vector3(0,2,0),Quaternion.identity,transform).gameObject;
+                GameObject effect = Instantiate(pe, transform.position + new Vector3(0, 2, 0), Quaternion.identity, transform).gameObject;
                 effect.GetComponent<EffectSettings>().Target = go;
                 SoundManager._instance.playerSound(audio);
-                go.SendMessage("takeEffectDmage", damage +","+ "skill3_3" + "," + 0);
+                go.SendMessage("takeEffectDmage", damage + "," + "skill3_3" + "," + 0);
             }
         }
     }
@@ -204,13 +217,16 @@ public class PlayerAttack : MonoBehaviour
             foreach (GameObject go in TranscriptManager._instance.enemyList)
             {
                 //将世界坐标转化为局部坐标
-                Vector3 pos = transform.InverseTransformPoint(go.transform.position);
-                if (pos.z > -0.5f)
+                if (go != null && go.GetComponent<Enemy>().HP > 0)
                 {
-                    float distance = Vector3.Distance(Vector3.zero, pos);
-                    if (distance < forwarAttackDis)
+                    Vector3 pos = transform.InverseTransformPoint(go.transform.position);
+                    if (pos.z > -0.5f)
                     {
-                        arrayList.Add(go);
+                        float distance = Vector3.Distance(Vector3.zero, pos);
+                        if (distance < forwarAttackDis)
+                        {
+                            arrayList.Add(go);
+                        }
                     }
                 }
             }
@@ -219,13 +235,32 @@ public class PlayerAttack : MonoBehaviour
         {
             foreach (GameObject go in TranscriptManager._instance.enemyList)
             {
-                float distance = Vector3.Distance(transform.position,go.transform.position);
-                if (distance < aroundAttackDis)
+                if (go != null && go.GetComponent<Enemy>().HP > 0)
                 {
-                    arrayList.Add(go);
+                    float distance = Vector3.Distance(transform.position, go.transform.position);
+                    if (distance < aroundAttackDis)
+                    {
+                        arrayList.Add(go);
+                    }
                 }
             }
         }
         return arrayList;
+    }
+    void TakeDamage(int damage)
+    {
+        if (this.HP <= 0)
+            return;
+        this.HP -= damage;
+        //播放被攻击动画,有几率触发动画
+        int rand = Random.Range(0, 100);
+        if (rand < damage)
+        {
+            anim.SetTrigger("TakeDamage");
+        }
+        //显示血量的减少
+        DamageTextManager._instance.InstantiateDamageText(this.gameObject, damage);
+        //屏幕上血红特效的显示
+        RedMesh._Instance.Show();
     }
 }

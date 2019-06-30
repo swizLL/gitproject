@@ -399,8 +399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 400052}
   - component: {fileID: 11400012}
-  - component: {fileID: 114339822031017768}
-  - component: {fileID: 114895251460292604}
+  - component: {fileID: 114952287898040560}
   m_Layer: 0
   m_Name: FirePhoenixMobile
   m_TagString: Untagged
@@ -667,7 +666,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100038}
-  m_LocalRotation: {x: 0.71390766, y: 0.69887996, z: 0.031170016, w: -0.030513888}
+  m_LocalRotation: {x: 0.7139077, y: 0.69888, z: 0.03117002, w: -0.030513892}
   m_LocalPosition: {x: 0.010526294, y: 0.5545821, z: -0.0009503749}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7692,7 +7691,7 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100052}
   m_IsPrefabParent: 1
---- !u!114 &114339822031017768
+--- !u!114 &114952287898040560
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -7703,15 +7702,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9acf6450b86826d4bb5ad5e93f6cfb39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114895251460292604
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78251438f54ccde4fa7347051dac2f35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destroyTime: 3

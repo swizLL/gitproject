@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TaskManager : MonoBehaviour {
     public static TaskManager _instance;
@@ -8,7 +9,7 @@ public class TaskManager : MonoBehaviour {
     private ArrayList taskList = new ArrayList();
     private Task currentTask;
     private PlayerAutoMove playerAutoMove;
-
+    AsyncOperation async = null;
     private PlayerAutoMove PlayerAutoMove
     {
         get
@@ -96,5 +97,23 @@ public class TaskManager : MonoBehaviour {
             NpcDialogUI._instance.onShow(currentTask.NpcTalk);
         }
         //TODO,到达副本面前
+        if(currentTask.TaskProgress==TaskProgress.Accept)
+        {
+            StartCoroutine("Loading");
+        }
+    }
+    IEnumerator Loading()
+    {
+        async = SceneManager.LoadSceneAsync("transcript");
+        async.allowSceneActivation = false;
+        LoadSceneProgressBar._instance.Show(async);
+        while(!async.isDone)
+        {
+            if (async.progress >= 0.9f)
+                break;
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.5f);
+        async.allowSceneActivation = true;
     }
 }

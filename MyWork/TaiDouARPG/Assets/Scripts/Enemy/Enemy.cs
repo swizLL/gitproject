@@ -1,38 +1,72 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     public float Speed = 1;
-    public int HP = 200;
+    public int TotalHP=200;//总血量
+    public int HP;//当前血量
+    public int attackRate = 2;//攻击速率，表示多少秒攻击一次
+    public float attackRange = 2;
+    public int Damage=20;//攻击力
 
+    private float distance;
+    private float attackTimer = 0;
     private Animation anim;
     private Transform bloodPoint;
     public GameObject damageEffect;
     private CharacterController cc;
-    private bool canMove = true;
+    private Slider BloodBar;
     private void Awake()
     {
         anim = this.GetComponent<Animation>();
         bloodPoint = this.transform.Find("BloodPoint").transform;
         cc = this.GetComponent<CharacterController>();
-
+        HP = TotalHP;
+    }
+    private void Start()
+    {
+        TranscriptManager._instance.enemyList.Add(this.gameObject);
+        InvokeRepeating("GetDistance", 0, 0.1f);
+        BloodBar = HPBarManager._instance.getBloodBar().GetComponent<Slider>();
     }
     //移动的方法
     private void Update()
     {
-        if (anim.IsPlaying("takedamage") || HP <= 0)
+        if (HP <= 0)
         {
-            canMove = false;
+            transform.Translate(-transform.up * Time.deltaTime);
+            return;
         }
-        else
+        //攻击
+        if (distance < attackRange)
         {
-            canMove = true;
+            attackTimer += Time.deltaTime;
+            if (attackTimer > attackRate)
+            {
+                //进行攻击
+                anim.Play("attack01");
+                attackTimer = 0;
+            }
+            if (!anim.IsPlaying("attack01"))
+            {
+                anim.CrossFade("idle");
+            }
         }
-        if (canMove)
+        else if (!anim.IsPlaying("takedamage"))
         {
             Move();
+        }
+        bloodBarFollow();
+    }
+    void Attack()
+    {
+        GetDistance();
+        if (distance < attackRange)
+        {
+            //最后那个参数是为了使主角身上没有这个方法时不抛出异常
+            TranscriptManager._instance.player.SendMessage("TakeDamage",Damage,SendMessageOptions.DontRequireReceiver);
         }
     }
     void Move()
@@ -44,6 +78,11 @@ public class Enemy : MonoBehaviour
         anim.Play("walk");
         cc.SimpleMove(transform.forward * Speed);
     }
+    void GetDistance()
+    {
+        Transform player = TranscriptManager._instance.player.transform;
+        distance = Vector3.Distance(player.position, transform.position);
+    }
     //收到攻击时调用这个方法
     //收到多少伤害
     //浮空和后退的距离
@@ -54,6 +93,10 @@ public class Enemy : MonoBehaviour
         //生命减少
         int damage = int.Parse(proArray[0]);
         HP -= damage;
+        //伤害显示
+        DamageTextManager._instance.InstantiateDamageText(this.gameObject, damage);
+        //血条更新
+        BloodBar.value = (float)HP / TotalHP;
         //受到攻击的动画
         anim.Play("takedamage");
         //浮空和后退
@@ -89,6 +132,10 @@ public class Enemy : MonoBehaviour
         //生命减少
         int damage = int.Parse(proArray[0]);
         HP -= damage;
+        //伤害显示
+        DamageTextManager._instance.InstantiateDamageText(this.gameObject, damage);
+        //血条更新
+        BloodBar.value = (float)HP / TotalHP;
         string audioName = proArray[1];
         float upDistance = float.Parse(proArray[2]);
         SoundManager._instance.playerSound(audioName);
@@ -101,8 +148,41 @@ public class Enemy : MonoBehaviour
 
     void Dead()
     {
-        anim.Play("die");
+        int rand = Random.Range(0, 10);
+        if (rand <= 7)
+        {
+            anim.Play("die");
+        }
+        else
+        {
+            anim.Play("die");
+            this.GetComponentInChildren<MeshExploder>().Explode();
+        }
+        TranscriptManager._instance.enemyList.Remove(this.gameObject);
         cc.enabled = false;
-        canMove = false;
+        Destroy(BloodBar.gameObject);
+        Destroy(this.gameObject, 5);
+    }
+    //Destroy本身就有自带延迟的参数，所以不需要使用协程了
+    //public IEnumerator DestroyObj(GameObject obj,float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    Destroy(obj);
+    //}
+    //血条跟随
+    void bloodBarFollow()
+    {
+        Vector2 vec2 = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
+        //0和100是偏移量
+        BloodBar.GetComponent<RectTransform>().anchoredPosition = new Vector2(vec2.x - Screen.width / 2 + 0, vec2.y - Screen.height / 2 + 110);
+        //超出屏幕范围外便不显示
+        if (vec2.x > Screen.width || vec2.x < 0 || vec2.y > Screen.height || vec2.y < 0)
+        {
+            BloodBar.gameObject.SetActive(false);
+        }
+        else
+        {
+            BloodBar.gameObject.SetActive(true);
+        }
     }
 }
