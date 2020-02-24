@@ -1,0 +1,11 @@
+<c3p0-config>
+	<default-config>
+		<property name="jdbcUrl">jdbc:mysql://127.0.0.1:3306/db01?useSSL=false&amp;serverTimezone=UTC</property>
+		<property name="driverClass">com.mysql.cj.jdbc.Driver</property>
+		<property name="user">root</property>
+		<property name="password">123456</property>
+		<property name="initialPoolSize">3</property>
+		<property name="maxPoolSize">6</property>
+		<property name="maxIdleTime">1000</property>
+	</default-config>
+</c3p0-config>
